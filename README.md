@@ -17,6 +17,12 @@ Web based Password Manager App 👨‍💼
 
 **Frontend**
  - React.js 💫
- - SASS 🟣
  - React Router 🎯
  - React Redux 🏪
+ - Tailwind CSS 💨
+ - Material UI 🔵
+
+<br>
+<div style="padding:10px; background:hsl(35, 40%, 20%);border-radius:10px;">
+⚠ : <b style="color:hsl(45, 90%, 40%)">Currently in Development</b>
+</div>
