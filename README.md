@@ -1,5 +1,5 @@
 <div style="width:100%;" align="center">
-    <img src="./frontend/public/PassVault.jpg" width="40%" height="200px" alt="PassVault logo">
+    <!-- <img src="./frontend/public/PassVault.jpg" width="40%" height="200px" alt="PassVault logo"> -->
     <h1 >PassVault</h1>
     <p style="font-size:20px;">Web based Password Manager App 👨‍💼</p>
 </div>
