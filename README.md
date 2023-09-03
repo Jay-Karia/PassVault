@@ -1,10 +1,10 @@
-<div style="width:100%;" align="center">
-    <img src="./frontend/public/PassVault_2.png" width="25%" height="150px" alt="PassVault logo">
+<div align="center">
+<div style="width:70%;aspect-ratio:2;" align="center">
+    <img src="./frontend/public/PassVault_2.png" alt="PassVault logo" width="20%" height="15%">
     <h1 >PassVault</h1>
     <p style="font-size:20px;">Web based Password Manager App 👨‍💼</p>
 </div>
-
-<br>
+</div>
 
 ## Features 🚀
 - Complete User Authentication with **Google Auth** 🔐
