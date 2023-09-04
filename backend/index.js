@@ -1,14 +1,21 @@
 const express = require('express')
 const dotenv = require("dotenv")
+const cors = require("cors")
 
-dotenv.config()
 const app = express()
-const port = process.env.PORT || 8000
-
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
+dotenv.config()
+const port = process.env.PORT || 5000
+app.use(cors())
 
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+    console.log(`App listening on port ${port}`)
 })
+
+// database
+const connectDB = require("./database/connectDB")
+connectDB()
+
+// routing
+const authRoutes = require("./routes/authRoutes")
+
+app.use("/auth", authRoutes)
