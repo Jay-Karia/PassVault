@@ -3,7 +3,8 @@ const generateToken = require("../config/generateToken")
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken')
 
-const User = require("../Models/userModel")
+const User = require("../models/userModel")
+const asyncHandler = require("express-async-handler")
 
 let emailRegex = /^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/;
 
@@ -29,7 +30,7 @@ function isEmailValid(email) {
     });
 }
 
-const register = async (req, res) => {
+const register = asyncHandler(async (req, res, next) => {
     // const user = JSON.parse(req.body)
     const user = req.body
 
@@ -67,10 +68,9 @@ const register = async (req, res) => {
         }
         return res.status(200).json({user: newUser, status: 'success', msg: 'Successfully Logged In!', token: token})
     }
+})
 
-}
-
-const login = async (req, res) => {
+const login = asyncHandler(async (req, res, next) => {
     // const user = JSON.parse(req.body)
     const user = req.body
 
@@ -102,6 +102,6 @@ const login = async (req, res) => {
     } catch (err) {
         return res.status(500).json({msg: 'Sorry! Some internal server error', error: err, status: 'error'})
     }
-}
+})
 
 module.exports = {register, login}

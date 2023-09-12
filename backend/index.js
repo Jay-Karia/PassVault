@@ -19,5 +19,7 @@ connectDB()
 
 // routing
 const authRoutes = require("./routes/authRoutes")
+const passRoutes = require("./routes/passRoutes")
 
 app.use("/auth", authRoutes)
+app.use("/", passRoutes)
