@@ -21,5 +21,5 @@ connectDB()
 const authRoutes = require("./routes/authRoutes")
 const passRoutes = require("./routes/passRoutes")
 
-app.use("/auth", authRoutes)
-app.use("/", passRoutes)
+app.use("/api/auth", authRoutes)
+app.use("/api", passRoutes)
