@@ -1,15 +1,16 @@
 const asyncHandler = require("express-async-handler")
 
 const Password = require("../models/passModel")
-const User = require("../models/userModel")
+
+// TODO: Encrypt and Decrypt password while creating or getting password
 
 const allPasswords = asyncHandler(async (req, res) => {
     const userId = req.user.id
     try {
-        const passwords = await Password.find({user: userId})
+        const passwords = await Password.find({user: userId}).populate("user", "-password")
 
         if (passwords.length === 0)
-            return res.status(200).json({msg: "You have created no passwords yet!", status: "warning"})
+            return res.status(400).json({msg: "No passwords found!", status: "warning"})
 
         return res.status(200).json({msg: "Successfully Loaded Passwords!", passwords: passwords, status: "success"})
     } catch (error) {
@@ -40,4 +41,18 @@ const createPassword = asyncHandler(async (req, res) => {
     }
 })
 
-module.exports = {allPasswords, createPassword}
+const getPassword = asyncHandler(async (req, res) => {
+    const passwordID = req.params.id
+
+    try {
+        const password = await Password.findById(passwordID).populate("user", "-password")
+        if (password.user.id !== req.user.id) // for security purpose (optional)
+            return res.status(400).json({msg: "No passwords found with the given ID!", status: "error"})
+
+        return res.status(200).json({msg: "Successfully Loaded Passwords!", passwords: password, status: "success"})
+    } catch (error) {
+        return res.status(400).json({msg: "Failed to fetch password!", status: "error", error: error})
+    }
+})
+
+module.exports = {allPasswords, createPassword, getPassword}

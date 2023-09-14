@@ -8,6 +8,12 @@ const passwordModel = mongoose.Schema({
     description: {
         type: String
     },
+    password: {
+        type: String,
+    },
+    email: {
+        type: String,
+    },
     websiteURL: {
         type: String,
     },
