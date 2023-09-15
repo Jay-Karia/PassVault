@@ -3,8 +3,14 @@ const asyncHandler = require("express-async-handler")
 const Password = require("../models/passModel")
 
 // TODO: Encrypt and Decrypt with custom Algorithms
-// TODO: Complete Update Password API
-// TODO: Complete Delete Password API
+
+function encrypt(password) {
+
+}
+
+function decrypt(password) {
+
+}
 
 const allPasswords = asyncHandler(async (req, res) => {
     const userId = req.user.id
@@ -52,7 +58,7 @@ const getPassword = asyncHandler(async (req, res) => {
         if (password.user.id !== req.user.id) // for security purpose (optional)
             return res.status(400).json({msg: "No passwords found with the given ID!", status: "error"})
 
-        return res.status(200).json({msg: "Successfully Loaded Password!", passwords: password, status: "success"})
+        return res.status(200).json({msg: "Successfully Loaded Password!", password: password, status: "success"})
     } catch (error) {
         return res.status(400).json({msg: "Failed to fetch password!", status: "error", error: error})
     }
@@ -68,28 +74,31 @@ const updatePassword = asyncHandler(async (req, res) => {
         if (newPassword.user.id !== req.user.id) // for security purpose (optional)
             return res.status(400).json({msg: "No passwords found with the given ID!", status: "error"})
 
-        newPassword.updateOne({user:userID}, [
-            {
-                $set: {
-                    title: title,
-                    description: description,
-                    websiteURL: websiteURL,
-                    password: password,
-                    email: email
-                },
-            }
-        ])
+        let updatedPassword = await Password.findById(passwordID).populate("user", "-password")
+        await Password.updateOne({_id: passwordID}, {$set: {title, description, websiteURL, password, email}})
 
-        return res.status(200).json({msg: "Successfully Updated Password!", passwords: newPassword, status: "success"})
+        return res.status(200).json({msg: "Successfully Updated Password!", password: updatedPassword, status: "success"})
     } catch (error) {
         return res.status(400).json({msg: "Failed to update password!", status: "error", error: error})
     }
 })
 
-const deletePassword = asyncHandler (async (req, res)=> {
+const deletePassword = asyncHandler(async (req, res) => {
     const passwordID = req.params.id
 
-    return res.send("delete: " + passwordID)
+    try {
+        const newPassword = await Password.findById(passwordID).populate("user", "-password")
+
+        if (newPassword.user.id !== req.user.id) // for security purpose (optional)
+            return res.status(400).json({msg: "No passwords found with the given ID!", status: "error"})
+
+        await Password.deleteOne({_id: passwordID})
+        return res.status(200).json({msg: "Successfully Deleted Password!", status: "success"})
+
+    } catch (error) {
+        return res.status(400).json({msg: "Failed to delete password!", status: "error", error: error})
+    }
+
 })
 
 module.exports = {allPasswords, createPassword, getPassword, updatePassword, deletePassword}
