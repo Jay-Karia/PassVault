@@ -14,17 +14,14 @@
 </div>
 
 ## Installation 📁
-<h3>Run our app locally in your machine 💻</h3>
-<b>Clone our repo: https://github.com/Jay-Karia/PassVault.git</b>
-<br>
 
-<h3><b>Setting Up Backend 📦</b> <br> </h3>
+<h4><b>Setting Up Backend 📦</b> <br> </h4>
 
 ```npm install``` in the root directory (Installs required packages in <b>server</b> directory)<br>
 ```npm run dev``` to start the development server with <b>nodemon</b> <br>
 ```npm run start``` to start the server
 
-<h3><b>Setting Up Frontend 👁</b></h3>
+<h4><b>Setting Up Frontend 👁</b></h4>
 
 ```cd frontend``` redirects to frontend directory <br>
 ```npm install``` installs required packages to frontend directory <br>
@@ -45,6 +42,12 @@
  - Material UI 🔵
 
 <br>
+
+## 🚀 About Me
+I'm a self-taught **full stack wev developer**
+
+See my profile [**here**](https://github.com/Jay-Karia)
+
 <div style="padding:10px; background:hsl(35, 40%, 20%);border-radius:10px;">
 ⚠ : <b style="color:hsl(45, 90%, 40%)">Currently in Development</b>
 </div>
