@@ -2,7 +2,6 @@
     <div style="width:70%;aspect-ratio:2;" align="center">
         <img src="./frontend/public/PassVault_2.png" alt="PassVault logo" width="20%" height="15%">
         <h1 >PassVault</h1>
-        <h2 style="font-size:20px;">Web based Password Manager App 👨‍💼</h2>
     </div>
     <p>
     🔐 <b>Securely</b> stores your password <br>
