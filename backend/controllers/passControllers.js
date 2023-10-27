@@ -73,7 +73,11 @@ const updatePassword = asyncHandler(async (req, res) => {
         let updatedPassword = await Password.findById(passwordID).populate("user", "-password")
         await Password.updateOne({_id: passwordID}, {$set: {title, description, websiteURL, password, email}})
 
-        return res.status(200).json({msg: "Successfully Updated Password!", password: updatedPassword, status: "success"})
+        return res.status(200).json({
+            msg: "Successfully Updated Password!",
+            password: updatedPassword,
+            status: "success"
+        })
     } catch (error) {
         return res.status(400).json({msg: "Failed to update password!", status: "error", error: error})
     }
@@ -97,20 +101,34 @@ const deletePassword = asyncHandler(async (req, res) => {
 
 })
 
-const generatePassword = asyncHandler (async (req, res)=> {
-    const {length, symbols, strength, numbers, type} = req.body
+const generatePassword = asyncHandler(async (req, res) => {
+    const {length, symbols = "", numbers = "", type, count, syllables = "", dashes = ""} = req.body
 
-    const passwords = genPassword(length, symbols, strength, numbers, type)
+    try {
+        const passwords = await genPassword(length, symbols, numbers, type, count, syllables, dashes)
 
-    return res.send("gen password", passwords)
+        return res.status(200).json({msg: "Successfully Generated Password!", status: "success", passwords: passwords})
+    } catch (error) {
+        return res.status(400).json({msg: "Failed to generate password!", status: "error", error: error})
+    }
+
 })
 
-const passwordStrength = asyncHandler (async (req, res)=> {
+const passwordStrength = asyncHandler(async (req, res) => {
     const {password} = req.body;
 
     const strength = passStrength(password);
 
-    return res.send("password strength", strength)
+    // return res.send("password strength", strength)
+    return res.status(200).json({msg: "Password Strength Checked!", status: "success", strength: strength})
 })
 
-module.exports = {allPasswords, createPassword, getPassword, updatePassword, deletePassword, generatePassword, passwordStrength}
+module.exports = {
+    allPasswords,
+    createPassword,
+    getPassword,
+    updatePassword,
+    deletePassword,
+    generatePassword,
+    passwordStrength
+}

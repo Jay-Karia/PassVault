@@ -1,5 +1,6 @@
 function passStrength (password) {
-    console.log("password strength")
+
+    console.log(password)
 
     return "password strength"
 }
