@@ -1,16 +1,13 @@
 const asyncHandler = require("express-async-handler")
 
 const Password = require("../models/passModel")
+const genPassword = require("../functions/genPassword")
+const passStrength = require("../functions/passStrength")
 
-// TODO: Encrypt and Decrypt with custom Algorithms
+// TODO Encrypt and Decrypt Passwords with custom Algorithms (remaining)
 
-function encrypt(password) {
-
-}
-
-function decrypt(password) {
-
-}
+// TODO Create an API to generate a password (in-progress)
+// TODO Create an API to get the password strength (in-progress)
 
 const allPasswords = asyncHandler(async (req, res) => {
     const userId = req.user.id
@@ -66,7 +63,6 @@ const getPassword = asyncHandler(async (req, res) => {
 
 const updatePassword = asyncHandler(async (req, res) => {
     const passwordID = req.params.id
-    const userID = req.user.id
     const {title, description, websiteURL, password, email} = req.body
 
     try {
@@ -101,4 +97,20 @@ const deletePassword = asyncHandler(async (req, res) => {
 
 })
 
-module.exports = {allPasswords, createPassword, getPassword, updatePassword, deletePassword}
+const generatePassword = asyncHandler (async (req, res)=> {
+    const {length, symbols, strength, numbers, type} = req.body
+
+    const passwords = genPassword(length, symbols, strength, numbers, type)
+
+    return res.send("gen password", passwords)
+})
+
+const passwordStrength = asyncHandler (async (req, res)=> {
+    const {password} = req.body;
+
+    const strength = passStrength(password);
+
+    return res.send("password strength", strength)
+})
+
+module.exports = {allPasswords, createPassword, getPassword, updatePassword, deletePassword, generatePassword, passwordStrength}
