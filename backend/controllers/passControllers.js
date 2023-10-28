@@ -7,12 +7,12 @@ const CryptoJS = require("crypto-js");
 
 // TODO Encrypt and Decrypt Passwords (in-progress)
 
-async function encrypt(password) {
-    return await CryptoJS.AES.encrypt(password, 'secret key 123').toString()
+async function encrypt(password, secret) {
+    return await CryptoJS.AES.encrypt(password, secret).toString()
 }
 
-async function decrypt(password) {
-    let bytes = await CryptoJS.AES.decrypt(password, 'secret key 123');
+async function decrypt(password, secret) {
+    let bytes = await CryptoJS.AES.decrypt(password, secret);
     return bytes.toString(CryptoJS.enc.Utf8)
 }
 
@@ -23,6 +23,10 @@ const allPasswords = asyncHandler(async (req, res) => {
 
         if (passwords.length === 0)
             return res.status(400).json({msg: "No passwords found!", status: "warning"})
+
+        for (let i = 0;i< passwords.length; i++) {
+            passwords[i].password = await decrypt(passwords[i].password, process.env.SECRET_KEY)
+        }
 
         return res.status(200).json({msg: "Successfully Loaded Passwords!", passwords: passwords, status: "success"})
     } catch (error) {
@@ -35,6 +39,8 @@ const createPassword = asyncHandler(async (req, res) => {
     const {title, description, websiteURL, password, email} = req.body
 
     try {
+        // encrypt password
+        const encryptedPassword = await encrypt(password, process.env.SECRET_KEY)
 
         if (!title || title.length === 0) {
             return res.status(400).json({msg: "Title not specified!", status: "error"})
@@ -42,7 +48,7 @@ const createPassword = asyncHandler(async (req, res) => {
             return res.status(400).json({msg: "Password not specified!", status: "error"})
 
         let newPassword = await Password.create({
-            title, description, websiteURL, user: userId, password, email
+            title, description, websiteURL, user: userId, email, password: encryptedPassword
         })
 
         newPassword = await Password.findById(newPassword.id).populate("user", "-password")
@@ -62,6 +68,8 @@ const getPassword = asyncHandler(async (req, res) => {
         if (password.user.id !== req.user.id) // for security purpose (optional)
             return res.status(400).json({msg: "No passwords found with the given ID!", status: "error"})
 
+        password.password = await decrypt(password.password, process.env.SECRET_KEY)
+
         return res.status(200).json({msg: "Successfully Loaded Password!", password: password, status: "success"})
     } catch (error) {
         return res.status(400).json({msg: "Failed to fetch password!", status: "error", error: error})
@@ -77,12 +85,13 @@ const updatePassword = asyncHandler(async (req, res) => {
         if (newPassword.user.id !== req.user.id) // for security purpose (optional)
             return res.status(400).json({msg: "No passwords found with the given ID!", status: "error"})
 
-        let updatedPassword = await Password.findById(passwordID).populate("user", "-password")
-        await Password.updateOne({_id: passwordID}, {$set: {title, description, websiteURL, password, email}})
+        let encryptedPassword = await encrypt(password, process.env.SECRET_KEY)
+
+        await Password.updateOne({_id: passwordID}, {$set: {title, description, websiteURL, password:encryptedPassword, email}})
 
         return res.status(200).json({
             msg: "Successfully Updated Password!",
-            password: updatedPassword,
+            password: newPassword,
             status: "success"
         })
     } catch (error) {
