@@ -1,8 +1,7 @@
+const {passwordStrength} = require("check-password-strength")
+
 function passStrength (password) {
-
-    console.log(password)
-
-    return "password strength"
+    return passwordStrength(password).value
 }
 
 module.exports = passStrength

@@ -4,10 +4,10 @@ const Password = require("../models/passModel")
 const genPassword = require("../functions/genPassword")
 const passStrength = require("../functions/passStrength")
 
-// TODO Encrypt and Decrypt Passwords with custom Algorithms (remaining)
+// TODO Encrypt and Decrypt Passwords (remaining)
 
-// TODO Create an API to generate a password (in-progress)
-// TODO Create an API to get the password strength (in-progress)
+// TODO Create an API to generate a password (done)
+// TODO Create an API to get the password strength (done)
 
 const allPasswords = asyncHandler(async (req, res) => {
     const userId = req.user.id
