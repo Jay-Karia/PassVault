@@ -5,7 +5,7 @@ const genPassword = require("../functions/genPassword")
 const passStrength = require("../functions/passStrength")
 const CryptoJS = require("crypto-js");
 
-// TODO Encrypt and Decrypt Passwords (in-progress)
+// TODO Encrypt and Decrypt Passwords (done)
 
 async function encrypt(password, secret) {
     return await CryptoJS.AES.encrypt(password, secret).toString()
