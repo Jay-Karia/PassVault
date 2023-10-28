@@ -3,11 +3,18 @@ const asyncHandler = require("express-async-handler")
 const Password = require("../models/passModel")
 const genPassword = require("../functions/genPassword")
 const passStrength = require("../functions/passStrength")
+const CryptoJS = require("crypto-js");
 
-// TODO Encrypt and Decrypt Passwords (remaining)
+// TODO Encrypt and Decrypt Passwords (in-progress)
 
-// TODO Create an API to generate a password (done)
-// TODO Create an API to get the password strength (done)
+async function encrypt(password) {
+    return await CryptoJS.AES.encrypt(password, 'secret key 123').toString()
+}
+
+async function decrypt(password) {
+    let bytes = await CryptoJS.AES.decrypt(password, 'secret key 123');
+    return bytes.toString(CryptoJS.enc.Utf8)
+}
 
 const allPasswords = asyncHandler(async (req, res) => {
     const userId = req.user.id
