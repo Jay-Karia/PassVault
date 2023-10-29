@@ -5,7 +5,7 @@ const genPassword = require("../functions/genPassword")
 const passStrength = require("../functions/passStrength")
 const CryptoJS = require("crypto-js");
 
-// TODO Encrypt and Decrypt Passwords (done)
+// TODO Password Checkup (in-progress)
 
 async function encrypt(password, secret) {
     return await CryptoJS.AES.encrypt(password, secret).toString()
@@ -139,6 +139,20 @@ const passwordStrength = asyncHandler(async (req, res) => {
     return res.status(200).json({msg: "Password Strength Checked!", status: "success", strength: strength})
 })
 
+const passwordCheckup = asyncHandler(async (req, res) => {
+    const userID = req.user.id
+    const response = "response"
+
+    // Algorithm for password checkup
+    try {
+
+    } catch (error) {
+        return res.status(400).json({msg: "Failed to check password!", status: "error", error: error})
+    }
+
+    return res.status(200).json({msg: "Password Checkup!", status: "success", response: response})
+})
+
 module.exports = {
     allPasswords,
     createPassword,
@@ -146,5 +160,6 @@ module.exports = {
     updatePassword,
     deletePassword,
     generatePassword,
-    passwordStrength
+    passwordStrength,
+    passwordCheckup
 }
