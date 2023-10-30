@@ -24,7 +24,7 @@ const allPasswords = asyncHandler(async (req, res) => {
         if (passwords.length === 0)
             return res.status(400).json({msg: "No passwords found!", status: "warning"})
 
-        for (let i = 0;i< passwords.length; i++) {
+        for (let i = 0; i < passwords.length; i++) {
             passwords[i].password = await decrypt(passwords[i].password, process.env.SECRET_KEY)
         }
 
@@ -87,7 +87,15 @@ const updatePassword = asyncHandler(async (req, res) => {
 
         let encryptedPassword = await encrypt(password, process.env.SECRET_KEY)
 
-        await Password.updateOne({_id: passwordID}, {$set: {title, description, websiteURL, password:encryptedPassword, email}})
+        await Password.updateOne({_id: passwordID}, {
+            $set: {
+                title,
+                description,
+                websiteURL,
+                password: encryptedPassword,
+                email
+            }
+        })
 
         return res.status(200).json({
             msg: "Successfully Updated Password!",
@@ -142,6 +150,7 @@ const passwordStrength = asyncHandler(async (req, res) => {
 const passwordCheckup = asyncHandler(async (req, res) => {
     const userID = req.user.id
     let response = {}
+    let allPasswords = []
 
     // Algorithm for password checkup
     try {
@@ -150,21 +159,24 @@ const passwordCheckup = asyncHandler(async (req, res) => {
         if (passwords.length === 0)
             return res.status(400).json({msg: "No passwords found!", status: "warning"})
 
+
         for (let i = 0;i< passwords.length; i++) {
-            passwords[i] = await decrypt(passwords[i].password, process.env.SECRET_KEY)
+            allPasswords[i] = await decrypt(passwords[i].password, process.env.SECRET_KEY)
         }
+
+        console.log(passwords)
 
         // checking for weak passwords
         let weakPasswords = []
-        for (let i = 0;i< passwords.length; i++) {
-            if (passStrength(passwords[i]).includes("weak") || passStrength(passwords[i]).includes("Weak"))
+        for (let i = 0;i< allPasswords.length; i++) {
+            if (passStrength(allPasswords[i]).includes("weak") || passStrength(allPasswords[i]).includes("Weak"))
                 weakPasswords.push(passwords[i])
         }
         // checking for reused passwords
         let reusedPasswords = []
-        for (let i = 0;i< passwords.length; i++) {
-            for (let j = 0;j< passwords.length; j++) {
-                if (passwords[i] === passwords[j] && i !== j)
+        for (let i = 0;i< allPasswords.length; i++) {
+            for (let j = 0;j< allPasswords.length; j++) {
+                if (allPasswords[i] === allPasswords[j] && i !== j)
                     reusedPasswords.push(passwords[i])
             }
         }
