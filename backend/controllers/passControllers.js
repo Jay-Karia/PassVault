@@ -141,10 +141,38 @@ const passwordStrength = asyncHandler(async (req, res) => {
 
 const passwordCheckup = asyncHandler(async (req, res) => {
     const userID = req.user.id
-    const response = "response"
+    let response = {}
 
     // Algorithm for password checkup
     try {
+        const passwords = await Password.find({user: userID})
+
+        if (passwords.length === 0)
+            return res.status(400).json({msg: "No passwords found!", status: "warning"})
+
+        for (let i = 0;i< passwords.length; i++) {
+            passwords[i] = await decrypt(passwords[i].password, process.env.SECRET_KEY)
+        }
+
+        // checking for weak passwords
+        let weakPasswords = []
+        for (let i = 0;i< passwords.length; i++) {
+            if (passStrength(passwords[i]).includes("weak") || passStrength(passwords[i]).includes("Weak"))
+                weakPasswords.push(passwords[i])
+        }
+        // checking for reused passwords
+        let reusedPasswords = []
+        for (let i = 0;i< passwords.length; i++) {
+            for (let j = 0;j< passwords.length; j++) {
+                if (passwords[i] === passwords[j] && i !== j)
+                    reusedPasswords.push(passwords[i])
+            }
+        }
+
+        response = {
+            weakPasswords: weakPasswords,
+            reusedPasswords: reusedPasswords
+        }
 
     } catch (error) {
         return res.status(400).json({msg: "Failed to check password!", status: "error", error: error})
